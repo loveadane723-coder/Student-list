@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - Ultimate Student System v5.0</title>
+    <style>
+        :root {
+            --gold: #ffd700;
+            --dark-gold: #b8860b;
+            --green-gold: #2e8b57;
+            --bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: white; margin: 0; }
+
+        /* ማርኪ - አንድ መስመር */
+        .marquee-container {
+            background: #000; padding: 12px 0; overflow: hidden;
+            border-bottom: 3px solid var(--gold); white-space: nowrap;
+        }
+        .marquee-text {
+            display: inline-block; font-size: 23px; font-weight: bold;
+            color: var(--gold); animation: moveLeft 15s linear infinite;
+        }
+        @keyframes moveLeft { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .gold-card {
+            background: var(--card-bg); border: 2px solid var(--gold);
+            border-radius: 15px; padding: 20px; margin: 20px auto;
+            width: 92%; max-width: 900px; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
+        }
+
+        /* ሰንጠረዥ - አረንጓዴ ወርቅ */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 10px; overflow: hidden; }
+        th { background: linear-gradient(135deg, #2e8b57, #ffd700); color: black; padding: 15px; font-weight: bold; }
+        td { border: 1px solid #333; padding: 10px; text-align: center; background: #1e1e1e; }
+
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--dark-gold); background: #222; color: white; font-size: 15px; }
+        button { background: linear-gradient(45deg, var(--dark-gold), var(--gold)); color: #000; font-weight: bold; cursor: pointer; border: none; }
+        
+        .hidden { display: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-bottom: 10px; }
+        .stat-item { background: #252525; border: 1px solid var(--gold); padding: 10px; border-radius: 8px; text-align: center; font-size: 13px; }
+        .stat-item span { display: block; font-size: 18px; color: var(--gold); font-weight: bold; }
+        
+        #sig-canvas { border: 2px dashed var(--gold); background: white; width: 100%; border-radius: 8px; }
+        .rule-line { border-left: 5px solid var(--green-gold); background: #222; padding: 10px; margin: 8px 0; border-radius: 5px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div class="marquee-container">
+        <div class="marquee-text" id="m-text">እንኳን ወደ አዳነ መልካሙ website በደህና መጣችሁ! Welcome to Adane Melkamu Website |ሉማሜ ሁለተኛ ደረጃ ትምህርት ቤት.........
+       .</div>
+    </div>
+
+    <div id="login-section" class="gold-card" style="text-align: center; margin-top: 50px;">
+        <h2 style="color: var(--gold);"> Student's Registration Login System </h2>
+        <input type="text" id="login-user" placeholder="Username (admin)">
+        <input type="password" id="login-pass" placeholder="Password">
+        <button onclick="handleLogin()">Login</button>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <div style="width: 92%; max-width: 900px; margin: auto; display: flex; justify-content: space-between; padding: 10px; gap: 5px;">
+            <button onclick="toggleSection('settings-panel')" style="width: auto; padding: 10px;">Setting ⚙️</button>
+            <button onclick="toggleSection('about-me')" style="width: auto; background: var(--green-gold); color: white; About mine</button>
+            <button onclick="logout()" style="background: #ff4444; width: auto; color: white;">About mine</button>
+        </div>
+
+        <div id="about-me" class="gold-card hidden">
+            <h3 style="color: var(--gold); text-align: center;">የባለሙያ መረጃ (Developer Profile)</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: center;">
+                <div style="text-align: left; flex: 1; min-width: 250px;">
+                    <p><strong>ስም:</strong> አዳነ መልካሙ </p>
+                    <p><strong>ስልክ:</strong> 0990088113</p>
+                    <p><strong>የስራ አይነት:</strong> ማንኛውንም የዌብሳይት ስራ ማሰራት የሚፈልግ ማግኘት ይችላል።</p>
+                    <p><strong>ፊርማ:</strong> <span style="font-family: cursive; color: var(--gold);">Adane Melkamu.</span></p>
+                </div>
+                <div style="background: white; padding: 10px; border-radius: 10px; color: black; text-align: center;">
+                    <div style="width: 100px; height: 100px; background: #000; margin: auto;"></div>
+                    <small>AM QR Code</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="gold-card">
+            <h3 id="h-stats" style="margin-top:0;">የተማሪዎች ስታቲስቲክስ</h3>
+            <div class="stats-grid">
+                <div class="stat-item">ጠቅላላ<span id="s-total">0</span></div>
+                <div class="stat-item">ወንድ<span id="s-male">0</span></div>
+                <div class="stat-item">ሴት<span id="s-female">0</span></div>
+                <div class="stat-item">9ኛ<span id="s-g9">0</span></div>
+                <div class="stat-item">10ኛ<span id="s-g10">0</span></div>
+                <div class="stat-item">11ኛ<span id="s-g11">0</span></div>
+                <div class="stat-item">12ኛ<span id="s-g12">0</span></div>
+            </div>
+        </div>
+
+        <div class="gold-card">
+            <h3 id="h-reg">አዲስ ተማሪ መመዝገቢያ</h3>
+            <input type="text" id="name" placeholder="ሙሉ ስም">
+            <div style="display: flex; gap: 10px;">
+                <select id="age"><option value="">እድሜ</option></select>
+                <input type="number" id="result" placeholder="ውጤት (ከ 600)" max="600">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <select id="grade">
+                    <option value="">ክፍል</option>
+                    <option value="9">9ኛ</option><option value="10">10ኛ</option>
+                    <option value="11">11ኛ</option><option value="12">12ኛ</option>
+                </select>
+                <select id="gender">
+                    <option value="">ፃታ</option>
+                    <option value="ወንድ">ወንድ</option><option value="ሴት">ሴት</option>
+                </select>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+                <select id="zone" onchange="updateWoreda()">
+                    <option value="">ዞን</option>
+                    <option value="ምስራቅ ጎጃም">ምስራቅ ጎጃም</option>
+                    <option value="ምዕራብ ጎጃም">ምዕራብ ጎጃም</option>
+                    <option value="Gonder">Gonder</option></option>
+                </select>
+                <select id="woreda" onchange="updateKebele()">
+                    <option value="">ወረዳ</option>
+                </select>
+                <select id="kebele">
+                    <option value="">ቀበሌ</option>
+                </select>
+            </div>
+
+            <div style="margin-top: 15px; border: 1px solid #444; padding: 10px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <label>ፊርማ:</label>
+                    <label><input type="checkbox" id="sig-toggle" checked> ፊርማ ይብራ</label>
+                </div>
+                <canvas id="sig-canvas" height="100"></canvas>
+                <button onclick="clearCanvas()" style="width: auto; padding: 5px 15px; font-size: 11px; background: #333; color: white;">አጥፋ</button>
+            </div>
+            <button onclick="addStudent()" style="margin-top: 15px;">መዝግብ</button>
+        </div>
+
+        <div class="gold-card">
+            <h3 id="h-list">የተመዘገቡ ተማሪዎች ዝርዝር</h3>
+            <div style="overflow-x: auto;">
+                <table id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>ስም</th><th>ክፍል</th><th>ውጤት</th><th>አድራሻ</th><th>ፊርማ</th><th>ተግባር</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-panel" class="gold-card hidden" style="position: fixed; top: 10%; left: 50%; transform: translateX(-50%); z-index: 3000; width: 85%; height: 75vh; overflow-y: auto; background: #111;">
+        <button onclick="toggleSection('settings-panel')" style="background: red; color: white; width: auto; float: right;">X</button>
+        <h2 style="color: var(--gold);">Settings</h2>
+        <hr>
+        <p>ቋንቋ: <select id="lang-select" onchange="changeLanguage()"><option value="am">Amharic</option><option value="en">English</option></select></p>
+        <p>ፓስወርድ: <input type="password" id="new-pass" placeholder="አዲስ ፓስወርድ" style="width:60%;"><button onclick="updatePassword()" style="width:30%;">ቀይር</button></p>
+        <h4 style="color: var(--gold);">የትምህርት ቤት ህጎች</h4>
+        <div id="rules-list"></div>
+    </div>
+
+    <script>
+        let students = JSON.parse(localStorage.getItem('ym_students')) || [];
+        let sysPass = localStorage.getItem('ym_sys_pass') || "1234";
+
+        // Location Data
+        const locationData = {
+            "ምስራቅ ጎጃም": {
+                "አዋባል": ["ሰንበት", "ሉማሜ", "አምባ ማርያም"],
+                "ደብረ ማርቆስ": ["ቀበሌ 01", "ቀበሌ 02", "ቀበሌ 03"]
+            },
+            "ምዕራብ ጎጃም": {
+                "ፍኖተ ሰላም": ["ቀበሌ 01", "ቀበሌ 02"],
+                "ባህር ዳር": ["ቀበሌ 01", "ቀበሌ 05"]
+            }
+        };
+
+        function updateWoreda() {
+            const z = document.getElementById('zone').value;
+            const w = document.getElementById('woreda');
+            w.innerHTML = '<option value="">ወረዳ</option>';
+            if(locationData[z]) {
+                Object.keys(locationData[z]).forEach(item => w.innerHTML += `<option value="${item}">${item}</option>`);
+            }
+        }
+
+        function updateKebele() {
+            const z = document.getElementById('zone').value;
+            const w = document.getElementById('woreda').value;
+            const k = document.getElementById('kebele');
+            k.innerHTML = '<option value="">ቀበሌ</option>';
+            if(locationData[z] && locationData[z][w]) {
+                locationData[z][w].forEach(item => k.innerHTML += `<option value="${item}">${item}</option>`);
+            }
+        }
+
+        // Age filler
+        for(let i=17; i<=25; i++) document.getElementById('age').innerHTML += `<option value="${i}">${i}</option>`;
+
+        // Rules
+        const rules = ["ሰዓት ማክበር", "ደንብ መልበስ", "ፀጉር መቆረጥ", "ስልክ መከልከል", "መምህራንን ማክበር", "ግጭት አለመፍጠር", "ንብረት መጠበቅ", "ሱስ መከልከል", "ፈተና አለመኮረጅ", "መታወቂያ መያዝ", "ፅዳት መጠበቅ", "ቤተመፅሀፍት ዝምታ", "ያለ ፍቃድ አለመውጣት", "ስፖርት መሳተፍ", "ለወላጅ መረጃ መስጠት"];
+        rules.forEach((r, i) => document.getElementById('rules-list').innerHTML += `<div class="rule-line"> ${i+1}. ${r}</div>`);
+
+        function handleLogin() {
+            if(document.getElementById('login-pass').value === sysPass) {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                initCanvas(); render();
+            } else { alert("ስህተት!"); }
+        }
+
+        function logout() { location.reload(); }
+        function toggleSection(id) { document.getElementById(id).classList.toggle('hidden'); }
+
+        function updatePassword() {
+            const p = document.getElementById('new-pass').value;
+            if(p) { localStorage.setItem('ym_sys_pass', p); sysPass = p; alert("ተቀይሯል!"); }
+        }
+
+        // Canvas
+        let canvas, ctx, drawing = false;
+        function initCanvas() {
+            canvas = document.getElementById('sig-canvas'); ctx = canvas.getContext('2d');
+            const start = (e) => { if(!document.getElementById('sig-toggle').checked) return; drawing = true; ctx.beginPath(); };
+            const move = (e) => { if(!drawing) return; const rect = canvas.getBoundingClientRect(); const x = (e.clientX || e.touches[0].clientX) - rect.left; const y = (e.clientY || e.touches[0].clientY) - rect.top; ctx.lineTo(x, y); ctx.stroke(); };
+            canvas.onmousedown = start; canvas.onmousemove = move; window.onmouseup = () => drawing = false;
+            canvas.ontouchstart = (e) => { e.preventDefault(); start(); }; canvas.ontouchmove = (e) => { e.preventDefault(); move(e); };
+        }
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        function addStudent() {
+            const name = document.getElementById('name').value;
+            const grade = document.getElementById('grade').value;
+            const res = document.getElementById('result').value;
+            const addr = `${document.getElementById('woreda').value}, ${document.getElementById('kebele').value}`;
+            
+            if(!name || !grade || res > 600) { alert("መረጃ በትክክል ይሙሉ!"); return; }
+
+            students.push({ id: Date.now(), name, grade, res, addr, gender: document.getElementById('gender').value, sig: canvas.toDataURL() });
+            localStorage.setItem('ym_students', JSON.stringify(students));
+            render(); clearCanvas();
+        }
+
+        function deleteStudent(id) { if(confirm("ይሰረዝ?")) { students = students.filter(s => s.id !== id); localStorage.setItem('ym_students', JSON.stringify(students)); render(); } }
+
+        function render() {
+            const tbody = document.querySelector('#studentTable tbody'); tbody.innerHTML = "";
+            students.forEach(s => {
+                tbody.innerHTML += `<tr><td>${s.name}</td><td>${s.grade}</td><td>${s.res}</td><td>${s.addr}</td><td><img src="${s.sig}" width="50" style="background:white;"></td><td><button onclick="deleteStudent(${s.id})" style="background:red; color:white; width:auto;">X</button></td></tr>`;
+            });
+            document.getElementById('s-total').innerText = students.length;
+            document.getElementById('s-male').innerText = students.filter(s => s.gender === "ወንድ").length;
+            document.getElementById('s-female').innerText = students.filter(s => s.gender === "ሴት").length;
+            [9, 10, 11, 12].forEach(g => document.getElementById(`s-g${g}`).innerText = students.filter(s => s.grade == g).length);
+        }
+
+        function changeLanguage() {
+            const l = document.getElementById('lang-select').value;
+            if(l === "en") {
+                document.getElementById('m-text').innerText = "Welcome to Adane Melkamu Website | Lumame School";
+                document.getElementById('h-stats').innerText = "Student Statistics";
+                document.getElementById('h-reg').innerText = "Registration Form";
+                document.getElementById('h-list').innerText = "Student List";
+            } else { location.reload(); }
+        }
+    </script>
+</body>
+</html>
